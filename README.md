@@ -4,287 +4,258 @@
 ### 1) Create And Setup Your Ansible Tower Environment
 - Ansible Tower Installation and Setup Runbook: https://scribehow.com/shared/Ansible_Tower_Setup_and_Configuration_Runbook_V2__uHuL7Z7eQCySip-xiK7ySA 
 
-### B) Once You're Done Setting Up Tower and Login, The Dashboard Should Look Like This
-![AnsibleTowerDashboard](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2011.43.19%20AM.png)
+# Project Overview
 
-## 2) Create a GitHub Project Repository
-Once you setup your Ansible Tower environment. Follow below instructions to create a GitHub Project  Repository which we’ll need to keep the automation playbooks/scripts.
-- Navigate to GitaHub, Click on `Repositories` and Clcik `New` to create a Repository
-![GitHubRepo](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2011.56.09%20AM.png)
+This repository delivers a **complete, reproducible Ansible Tower / AWX Workflow** project that automates everything from **controller object bootstrapping** (organizations, inventories, credentials, projects) to **job templates**, **workflow templates**, **surveys**, and **notifications**—all as code.  
+It’s built to be **portfolio‑ready** and **team‑friendly**: new environments can be spun up quickly, workflows are version‑controlled, and Day‑2 changes are tracked by pull requests. The repo also includes guidance for both **AWX (open‑source)** and **Ansible Automation Platform (AAP) Controller** (enterprise) using the modern **`awx.awx`** and **`ansible.controller`** collections.
 
-- Click on New and Create your Project Repository
-![GitHubRepo](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2012.02.22%20PM.png)
-![YourGitHubRepo](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2012.07.48%20PM.png)
+---
 
-### B) Clone The Repository Locally, Download The Project Playbooks and Push to GitHub
-- Create a Folder in `Documents` called `Repositories` if you do not have one already where you git all your Git Repositories
-![YourGitHubRepo](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2012.17.05%20PM.png)
+# Ansible Tower / AWX Workflow — Complete Project
 
-- Clone Your Project Repository to the `Repositories` folder you just created
-- Copy the `HTTPS Clone URL` and Run the command `git clone REPO_HTTPS_CLONE_URL`
-![YourGitHubRepo](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2012.34.12%20PM.png)
+![Automation](https://img.shields.io/badge/Automation-Ansible-red)
+![Controller](https://img.shields.io/badge/Controller-AWX%20%7C%20AAP-blue)
+![IaC](https://img.shields.io/badge/Everything%20as%20Code-Controller%20Objects-blueviolet)
+![License](https://img.shields.io/badge/license-MIT-informational)
 
-- Download the Project `ZIP` From the Following Repository: https://github.com/awanmbandi/aws-real-world-projects
-    - Branch: `ansible-tower-workflow-project`
-![DownloadGitHubProjectZip](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2012.27.05%20PM.png)
+---
 
-- Unzip and Move/Copy Everything to The Repository You Cloned
-![YourGitHubRepo](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%201.09.34%20PM.png)
+## ✨ What this project does
 
-- Add the Changes, Commit and Push to GitHub
-![CommitPushGitHub](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%201.23.02%20PM.png)
-- Verify and Confirm that the Code is Available on GitHub
-![VerifyCodeAvailabilityGitHub](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%201.26.05%20PM.png)
+- **Bootstraps Controller**: creates organizations, teams, users, inventories, hosts, groups, credentials, execution environments, projects, job templates, workflow job templates, schedules, notifications—**as code**.
+- **Defines Reusable Workflows**: end‑to‑end workflows that chain job templates (e.g., build → test → deploy → verify), with conditionals, approvals, and failure branches.
+- **Environment Parity**: one repo; multiple inventories (`dev`, `staging`, `prod`) and variable overlays.
+- **GitOps‑friendly**: changes flow through PRs; optional CI validates object syntax before applying.
+- **Idempotent & Auditable**: re‑runs safely; every controller change is captured in VCS.
 
-## Create An Elastic IP Address In Your Working Region
-* **NOTE: 1** *This IP will be used by the application server that will be Orchestrated by the `appserver_instance.yaml` automation playbook*
-* **NOTE: 2** *The IP will also be used by Tower to Configure and Deploy the Web Application*
-  - Click on `Elastic IPs`
-  - Click on `Allocate Elastic IP address`
-  - Tag Key: `env`
-  - Tag Value: `dev`
-![CreateElasticIP](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2011.23.41%20AM.png)
-![CreateElasticIP](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2011.29.51%20AM.png)
+---
 
-- Confirm that you were assigned an Elastic IP Address
-![VerifyElasticIP](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2011.37.36%20AM.png)
+## 📦 Suggested repository structure
 
-## 2) Create Ansible Tower Project Resources
-### A) Create An Inventory
-- Navigate back to `Tower`, http:ANSIBLE_TOWER_IP
-- Click on `Inventory`
-    - Click on `Inventory`
-    - Name: `Appserver-Host`
-    - Organization: `Default`
-    - Click on `SAVE`
-![CreateProjectInventory](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%206.48.56%20PM.png)
-![Inventory](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-15%20at%209.29.51%20AM.png)
-- Click on `HOST`
-    - Click on the `Plus(+)` to add an Inventory
-    - Host Name: `APPSERVER_ELASTIC_IP`
-    - Click on `SAVE`
-![Inventory](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%207.05.00%20PM.png)
-![Inventory](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%207.07.34%20PM.png)
-![InvResult](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%207.12.25%20PM.png)
+> If your tree differs, keep the same intent: **objects and data are code** and live alongside playbooks and roles.
 
-### B) Create A Project
-- Click on `Projects`
-- Click on the `Plus(+)` to Create a Project
-    - Name: `tower-automation-workflow-project`
-    - Organization: `Default`
-    - SCM Type: Select `GIT`
-    - SCM URL: Provide your `GitHub project URL`
-    - SCM Updates Options: Select `Clean` and `Delete On Updates`
-    - Click `SAVE`
-![CreateProject](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%207.15.14%20PM.png)
-![CreateProject](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%207.24.13%20PM.png)
-![CreateProject](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%207.27.02%20PM.png)
+```
+.
+├─ playbooks/
+│  ├─ bootstrap-controller.yml        # Creates orgs/teams/creds/projects/etc.
+│  ├─ define-job-templates.yml        # Creates job templates
+│  └─ define-workflows.yml            # Creates workflow job templates
+├─ roles/                             # Optional roles for app tasks
+│  └─ <your-roles>/
+├─ inventories/
+│  ├─ dev/
+│  │  ├─ hosts.ini
+│  │  └─ group_vars/
+│  ├─ staging/
+│  └─ prod/
+├─ controller_objects/                # “Controller-as-code” definitions (YAML vars)
+│  ├─ organizations.yml
+│  ├─ teams.yml
+│  ├─ users.yml
+│  ├─ credentials.yml
+│  ├─ projects.yml
+│  ├─ inventories.yml
+│  ├─ job_templates.yml
+│  └─ workflows.yml
+├─ vars/                              # shared vars, EE images, default creds ids
+│  └─ main.yml
+├─ collections/requirements.yml       # awx.awx / ansible.controller, etc.
+├─ requirements.yml                   # Ansible roles (galaxy)
+├─ scripts/                           # helper scripts (lint, apply, smoke tests)
+├─ .github/workflows/                 # optional CI to lint/apply object definitions
+└─ README.md
+```
 
-### C) Generate API Keys (Access and Secret Keys) For Your AWS Environment
-- Identify a User with `EC2` and `RDS` Access or `AdministratorAccess` 
-- You can as well Create a New user if you do not have one and assign the required access
-- Generate `Access` and `Secret` Keys for we'll need this to Authorize Ansible Tower 
+---
 
-### B) Create Credentials For Your AWS Environment and Appserver
-### B.1) Create AWS Credential
-- Click on `Credentials`
-- Click on the `Plus(+)` to Create AWS Credential
-    - Name: `aws-environment-credential`
-    - Organization: Select `Default`
-    - Credential Type: Select `Amazon Web Services`
-    - Access Key: Provide your `Access Key`
-    - Secret Key: Provide your `Secret Key`
-    - Click on `SAVE`
-![CreateCredential](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%207.31.05%20PM.png)
-- Provide all relevant values
-![CreateCredential](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%207.43.37%20PM.png)
+## 🧭 Architecture (workflow at a glance)
 
-### B.2) Create Appserver/Machine Credential
-- Click on the `Plus(+)` to Create AWS Credential
-    - Name: `appserver-machine-credential`
-    - Description: `appserver-machine-credential`
-    - Organization: Select `Default`
-    - Credential Type: Select `Machine`
-    - Username: `ansibletower`
-    - Password: `ansibletower`
-![CreateCredential](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%207.52.34%20PM.png)
-![CreateCredential](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%207.57.39%20PM.png)
-![CreateCredential](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%208.04.13%20PM.png)
+```
+Developer PR → main
+       │
+       ▼
+  CI Lint & Validate (ansible-lint, yamllint)
+       │
+       ▼
+ Apply Controller Objects (awx.awx / ansible.controller)
+       │
+       ▼
+   Job Templates created/updated ──┐
+       │                           │
+       ▼                           │
+  Workflow Templates link stages ◄─┘
+       │
+       ▼
+ Schedules / Surveys / Notifications
+```
 
-### D) Create Your Tower Project Job Templates 
-### D.1) Create The Database Job Template
-- Navigate to `Templates`
-- Click on the plus to create a `Job Template`
-    - Name: `database-instance-job-template`
-    - Inventory: `Appserver-Host`
-    - Job Type: Select `RUN`
-    - Project: Select `tower-automation-workflow-project`
-    - Playbook: Select the `rds_db_instance.yaml`
-    - Credentials: Select your AWS Credential `aws-environment-credential`
-    - Verbosity: Select...
-    - Click on `SAVE`
-![JobTemplate](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%208.09.20%20PM.png)
-![DatabaseJobTemplate](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%208.23.35%20PM.png)
+---
 
-### D.2) Create The Appserver Job Template
-- Click on the plus to create a `Job Template`
-    - Name: `appserver-instance-job-template`
-    - Inventory: `Appserver-Host`
-    - Job Type: Select `RUN`
-    - Project: Select `tower-automation-workflow-project`
-    - Playbook: Select the `appserver_instance.yaml`
-    - Credentials: Select your AWS Credential `aws-environment-credential`
-    - Verbosity: Select...
-    - Click on `SAVE`
-![JobTemplate](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%208.29.10%20PM.png)
-![AppserverJobTemplate](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%208.31.47%20PM.png)
+## 🚀 Getting Started
 
-### D.3) Create The Job Template To Clone The Project Repository
-- Click on the plus to create a `Job Template`
-    - Name: `clone-project-repository-job-template`
-    - Inventory: `Appserver-Host`
-    - Job Type: Select `RUN`
-    - Project: Select `tower-automation-workflow-project`
-    - Playbook: Select the `clone_project_repo.yaml`
-    - Credentials: Select your Machine Credential `appserver-machine-credential`
-    - Verbosity: Select...
-    - Click on `SAVE`
-![CloneRepoJobTemplate](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%208.36.47%20PM.png)
+### Prerequisites
 
-### D.4) Create The Application Deployment Job Template
-- Click on the plus to create a `Job Template`
-    - Name: `application-deployment-job-template`
-    - Inventory: `Appserver-Host`
-    - Job Type: Select `RUN`
-    - Project: Select `tower-automation-workflow-project`
-    - Playbook: Select the `app_deployment_config.yaml`
-    - Credentials: Select your Machine Credential `appserver-machine-credential`
-    - Verbosity: Select...
-    - Click on `SAVE`
-![DeployAppTemplate](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%208.53.10%20PM.png)
+- **Ansible ≥ 2.14**
+- Access to **AWX** or **AAP Controller** (URL + token or username/password)
+- Python libs: `awxkit` (optional), `requests`
+- Collections installed:
+  ```bash
+  ansible-galaxy collection install awx.awx ansible.controller
+  ansible-galaxy install -r requirements.yml   # if using roles
+  ```
 
-### D.5) Create The Database Configuration and Integration Job Template
-- Click on the plus to create a `Job Template`
-    - Name: `configure-application-database-integration-job-template`
-    - Inventory: `Appserver-Host`
-    - Job Type: Select `RUN`
-    - Project: Select `tower-automation-workflow-project`
-    - Playbook: Select the `app_db_config.yaml`
-    - Credentials: Select your Machine Credential `appserver-machine-credential`
-    - Verbosity: Select...
-    - Click on `SAVE`
-![ConfigureDBJobTemplate](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%208.57.34%20PM.png)
+### Authentication setup
 
-### Confirm You Have The Following Job Templates Created
-![AllJobTemplate](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%208.59.06%20PM.png)
+Create an environment file or use Ansible vars for controller connection:
 
-## 3) Create Project Workflow Job
-- Click on `Templates`
-- Click on the plus to create a `Workflow Template`
-    - Name: `complete-project-workflow-automation`
-    - Default: Select `Default`
-    - Inventory; Select `Appserver-Host`
-    - Click on `SAVE`
-![CreateWorkflowTemplate](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%209.13.33%20PM.png)
-![CreateWorkflowTemplate](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%209.19.09%20PM.png)
+```yaml
+# vars/controller.yml
+controller_host: "https://awx.example.com"
+controller_username: "admin"
+controller_password: "!ChangeMe!"
+controller_verify_ssl: false   # set true with valid certs
+```
 
-### 3.1) Add A Project Sync Stage
-- Click on `START`
-- Click on the Drop Down on the Right hand and select `Project Sync`
-- Select the `tower-automation-workflow-project` project
-- `RUN` Select `Always`
-- `CONVERENCE` Select `Any`
-- Click on `SELECT`
-![IntegrateJobs](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%209.30.18%20PM.png)
+> Prefer **tokens** in CI. Store secrets in GitHub Actions / Jenkins credentials, not in Git.
 
-### 3.2) Add The Database Provisioning Stage
-- Click on `START`
-- Click on the Drop Down on the Right hand and select `Template`
-- Select the `database-instance-job-template` project
-- `RUN` Select `Always`
-- `CONVERENCE` Select `Any`
-- Click on `SELECT`
-![DatabaseJobs](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%209.36.03%20PM.png)
+### Bootstrap controller objects
 
-### 3.3) Add The Application Server Provisioning Stage
-- Click on `START`
-- Click on the Drop Down on the Right hand and select `Template`
-- Select the `application-deployment-job-template` project
-- `RUN` Select `Always`
-- `CONVERENCE` Select `Any`
-- Click on `SELECT`
-![DatabaseJobs](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%209.40.22%20PM.png)
+Run the bootstrap playbook to create orgs, teams, credentials, inventories, and projects:
 
-### 3.4) Add The Approval Stage
-- Click on `START`
-- Click on the Drop Down on the Right hand and select `Approval`
-- Name: `Approve App Deployment`
-- Timeout: `30 Minutes`
-- Run: `On Success` 
-- Coverage: `Any`
-![DatabaseJobs](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%209.47.13%20PM.png)
+```bash
+ansible-playbook -e @vars/controller.yml playbooks/bootstrap-controller.yml
+```
 
-### 3.5) Add The Application Server Provisioning Stage
-- Click on `START`
-- Click on the Drop Down on the Right hand and select `Template`
-- Select the `clone-project-repository-job-template` project
-- `RUN` Select `Always`
-- `COVERAGE` Select `Any`
-- Click on `SELECT`
-![DatabaseJobs](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%209.51.02%20PM.png)
+Then create job templates and workflows:
 
-### 3.6) Add The Application Deployment Stage
-- Click on `START`
-- Click on the Drop Down on the Right hand and select `Template`
-- Select the `application-deployment-job-template` project
-- `RUN` Select `Always`
-- `COVERAGE` Select `Any`
-- Click on `SELECT`
-![DatabaseJobs](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%209.55.32%20PM.png)
+```bash
+ansible-playbook -e @vars/controller.yml playbooks/define-job-templates.yml
+ansible-playbook -e @vars/controller.yml playbooks/define-workflows.yml
+```
 
-### 3.7) Add The Application Deployment Stage
-- Click on `START`
-- Click on the Drop Down on the Right hand and select `Template`
-- Select the `configure-application-database-integration-job-template` project
-- `RUN` Select `Always`
-- `COVERAGE` Select `Any`
-- Click on `SELECT`
-![DatabaseJobs](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2010.02.03%20PM.png)
+---
 
-### 3.8) Add The Application Deployment Stage
-- Click on `SAVE`
-![DatabaseJobs](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2010.03.23%20PM.png)
+## 🧩 Example: controller-as-code (objects via vars)
 
-### 4) Start The Workflow Automation
-- Click on `Templates`
-- Click on `complete-project-workflow-automation`
-- Click on `Start` or `Launch`
-![DatabaseJobs](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2010.40.03%20PM.png)
+**`controller_objects/projects.yml`**
 
-### 5) Approve Application Configurationa And Deployment
-- Click on `Alerts` and `APPROVE`
-- You also have the option to `DENY`
-![DatabaseJobs](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2011.17.44%20PM.png)
-![DatabaseJobs](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2011.23.48%20PM.png)
+```yaml
+controller_projects:
+  - name: "Platform Playbooks"
+    description: "Core ops playbooks"
+    organization: "Platform"
+    scm_type: "git"
+    scm_url: "https://github.com/your-org/platform-playbooks.git"
+    scm_branch: "main"
+    update_project: true
+    wait: true
+```
 
-### 6) Confirm That Your Workflow Succeeded
-![ConfirmWorkFlowSuccess](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2011.27.29%20PM.png)
+**`controller_objects/job_templates.yml`**
 
-### 7) Access The Web Application Deployed In The Appserver Environment
-- Navigate to `EC2`
-- Select the `WebAppServer`, Copy the `Public IP` address and Paste on the `Browser`
-- **NOTE: 1** *Make sure you have port `80` open to the Internet* 
-- **NOTE: 1** *Also make sure you have port `3306` open to your `VPC Network`=`172.31.0.0/16`*
-![ConfirmWorkFlowSuccess](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2011.41.19%20PM.png)
+```yaml
+controller_job_templates:
+  - name: "Deploy App"
+    organization: "Platform"
+    inventory: "Prod Inventory"
+    project: "Platform Playbooks"
+    playbook: "playbooks/deploy.yml"
+    execution_environment: "ee-supported:latest"
+    credentials:
+      - "Prod SSH Key"
+      - "Vault"
+    extra_vars:
+      release_version: "latest"
+```
 
-- Copy the RDS Database Endpoint
-![ConfirmWorkFlowSuccess](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-14%20at%2011.59.09%20PM.png)
+**`controller_objects/workflows.yml`**
 
-- Login to the Application Server
-- Edit the Database Configuration File and Provide Your Database Endpoint
-- RUN: `sudo vi /var/www/wordpress/wp-config.php`
-![ConfirmWorkFlowSuccess](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-15%20at%2012.02.52%20AM.png)
+```yaml
+controller_workflows:
+  - name: "Blue-Green Deploy"
+    organization: "Platform"
+    state: "present"
+    simplified_workflow_nodes:
+      - identifier: "Build"
+        unified_job_template: "Build Artifact"
+      - identifier: "Deploy-Blue"
+        unified_job_template: "Deploy App (blue)"
+        success_nodes: ["Swap-Prod"]
+      - identifier: "Swap-Prod"
+        unified_job_template: "Switch Traffic to Blue"
+        failure_nodes: ["Rollback"]
+      - identifier: "Rollback"
+        unified_job_template: "Rollback to Green"
+```
 
-### 8) Once You're Done Making The Above Changes, Go Ahead And Test The Application Access Again
-- Make sure it's now able to connect with the Database
-![ConfirmWorkFlowSuccess](https://github.com/awanmbandi/aws-real-world-projects/blob/project-resources-docs/images/Screen%20Shot%202023-11-15%20at%2012.06.52%20AM.png)
+---
+
+## 🧪 CI integration (optional)
+
+Add a minimal pipeline to lint, validate, and apply object code:
+
+```yaml
+# .github/workflows/controller.yml
+name: Controller Objects
+on: [push, pull_request]
+jobs:
+  lint-apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install Ansible & collections
+        run: |
+          pip install ansible-core ansible-lint yamllint
+          ansible-galaxy collection install awx.awx ansible.controller
+      - name: Lint
+        run: |
+          yamllint .
+          ansible-lint
+      - name: Apply to controller (on main only)
+        if: github.ref == 'refs/heads/main'
+        env:
+          CONTROLLER_HOST: ${{ secrets.CONTROLLER_HOST }}
+          CONTROLLER_USERNAME: ${{ secrets.CONTROLLER_USERNAME }}
+          CONTROLLER_PASSWORD: ${{ secrets.CONTROLLER_PASSWORD }}
+        run: |
+          ansible-playbook -e controller_host=$CONTROLLER_HOST                            -e controller_username=$CONTROLLER_USERNAME                            -e controller_password=$CONTROLLER_PASSWORD                            playbooks/bootstrap-controller.yml
+```
+
+> Switch to **tokens** with `controller_oauthtoken` for production and set `controller_verify_ssl: true` with a valid CA chain.
+
+---
+
+## 🔐 Security & best practices
+
+- **Store secrets** in CI secret stores (GitHub Actions, Jenkins) or Ansible Vault.
+- Use **EE (Execution Environments)** with pinned collections and Python deps.
+- Enforce **least privilege** on organization/team permissions and credentials.
+- Enable **notifications** (Slack/Email) on workflow success/failure.
+- Use **surveys** to collect runtime inputs (e.g., `release_version`).
+
+---
+
+## 🛣️ Roadmap
+
+- [ ] Add **RBAC as code** (roles for teams/users).
+- [ ] Add **Schedules** for recurring workflows (patching windows).
+- [ ] Add **Policy checks** (ansible-lint rulesets, content signing).
+- [ ] Add **Inventory sources** (cloud dynamic inventory) with cache control.
+- [ ] Add **Approvals** in workflows for prod deploys.
+
+---
+
+## 🆘 Troubleshooting
+
+- **401/403** → verify controller credentials and user permissions.  
+- **SCM project sync fails** → validate repo URL/branch, webhook token, and PAT.  
+- **Job template can’t find inventory/creds** → ensure those objects exist and names match.  
+- **Workflow edges wrong** → inspect `simplified_workflow_nodes` identifiers; they must match.  
+
+---
+
+## 📜 License
+
+MIT © Akuphe
